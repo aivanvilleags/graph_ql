@@ -4,14 +4,63 @@ const { graphqlHTTP } = require("express-graphql");
 
 const schema = buildSchema(`
     type Query {
-        description: String
-        price: Float
+        products: [Product]
+        orders: [Order]
+    }
+
+    type Product {
+        id: ID!
+        description: String!
+        reviews: [Review]
+        price: Float!
+    }
+
+    type Review{
+        rating: Int!
+        comment: String
+    }
+
+    type Order{
+        date: String!
+        subtotal: Float!
+        items: [OrderItem]
+    }
+
+    type OrderItem{
+        product: Product!
+        quantity: Int!
     }
 `);
 
 const root = {
-  description: "Red shoe",
-  price: 42.12,
+  products: [
+    {
+      id: "rs01",
+      description: "red shoe",
+      price: 24.5,
+    },
+    {
+      id: "blj01",
+      description: "Blue Jean",
+      price: 12.5,
+    },
+  ],
+  orders: [
+    {
+      date: "2005-05-05",
+      subtotal: 125.23,
+      items: [
+        {
+          product: {
+            id: "rs01",
+            description: "Old Red Shoe",
+            price: 45.5,
+          },
+          quantity: 10,
+        },
+      ],
+    },
+  ],
 };
 
 const app = express();
@@ -21,6 +70,7 @@ app.use(
   graphqlHTTP({
     schema,
     rootValue: root,
+    graphiql: true,
   })
 );
 
