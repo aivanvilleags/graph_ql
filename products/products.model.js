@@ -22,9 +22,9 @@ function getProductsByPrice(min, max) {
 }
 
 function getProductById(id) {
-  return products.filter((product) => {
+  return products.find((product) => {
     return product.id == id;
-  })[0];
+  });
 }
 
 module.exports = {
